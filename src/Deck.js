@@ -5,6 +5,13 @@ export default function Deck({ data, renderCard }) {
   const screenWidth = useWindowDimensions().width;
   const position = useRef(new Animated.ValueXY()).current;
 
+  const resetPosition = () => {
+    // 彈回去原本位置
+    Animated.spring(position, {
+      toValue: { x: 0, y: 0 }
+    }).start();
+  };
+
   const panResponder = useRef(
     PanResponder.create({
       // 是否允許繼續執行觸碰事件
@@ -19,9 +26,11 @@ export default function Deck({ data, renderCard }) {
         [null, { dx: position.x, dy: position.y }],
         { useNativeDriver: false }
       ),
+      // 放開了所有觸碰
       onPanResponderRelease: (evt, gestureState) => {
-        // 放開了所有觸碰
-        position.flattenOffset();
+        // 將偏移值合併到基值中並將偏移重置為零
+        // position.flattenOffset();
+        resetPosition();
       }
     })
   ).current;
