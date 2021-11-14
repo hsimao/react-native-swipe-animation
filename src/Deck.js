@@ -28,7 +28,7 @@ export default function Deck({ data, renderCard }) {
 
   const getCardStyle = () => {
     const rotate = position.x.interpolate({
-      inputRange: [-screenWidth, 0, screenWidth],
+      inputRange: [-screenWidth * 1.5, 0, screenWidth * 1.5],
       outputRange: ["-120deg", "0deg", "120deg"]
     });
 
