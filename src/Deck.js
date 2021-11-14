@@ -1,8 +1,8 @@
 import React, { useRef } from "react";
-import { Animated, View, PanResponder } from "react-native";
-import styled from "styled-components/native";
+import { Animated, PanResponder, useWindowDimensions } from "react-native";
 
 export default function Deck({ data, renderCard }) {
+  const screenWidth = useWindowDimensions().width;
   const position = useRef(new Animated.ValueXY()).current;
 
   const panResponder = useRef(
@@ -26,18 +26,28 @@ export default function Deck({ data, renderCard }) {
     })
   ).current;
 
+  const getCardStyle = () => {
+    const rotate = position.x.interpolate({
+      inputRange: [-screenWidth, 0, screenWidth],
+      outputRange: ["-120deg", "0deg", "120deg"]
+    });
+
+    return {
+      transform: [
+        { translateX: position.x },
+        { translateY: position.y },
+        { rotate }
+      ]
+    };
+  };
+
   const renderCards = () => {
     return data.map((item, index) => {
       if (index === 0) {
         return (
           <Animated.View
             key={item.id}
-            style={{
-              transform: [
-                { translateX: position.x },
-                { translateY: position.y }
-              ]
-            }}
+            style={getCardStyle()}
             {...panResponder.panHandlers}
           >
             {renderCard(item)}
