@@ -64,10 +64,23 @@ export default function App() {
     );
   };
 
+  const onSwipeLeft = () => {
+    console.log("onSwipeLeft");
+  };
+
+  const onSwipeRight = () => {
+    console.log("onSwipeRight");
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar style="auto" />
-      <Deck data={cardList} renderCard={renderCard} />
+      <Deck
+        data={cardList}
+        renderCard={renderCard}
+        onSwipeLeft={onSwipeLeft}
+        onSwipeRight={onSwipeRight}
+      />
     </View>
   );
 }
