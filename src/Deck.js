@@ -1,10 +1,12 @@
-import React, { useRef } from "react";
+import React, { useRef, useState } from "react";
 import { Animated, PanResponder, useWindowDimensions } from "react-native";
 
 export default function Deck({ data, renderCard, onSwipeLeft, onSwipeRight }) {
   const SCREEN_WIDTH = useWindowDimensions().width;
   const SWIPE_THRESHOLD = 0.25 * SCREEN_WIDTH;
   const SWIPE_OUT_DURATION = 250;
+
+  const [dataIndex, setDataIndex] = useState(0);
 
   const position = useRef(new Animated.ValueXY()).current;
 
@@ -17,7 +19,13 @@ export default function Deck({ data, renderCard, onSwipeLeft, onSwipeRight }) {
   };
 
   const handleSwipeComplete = (direction) => {
-    direction === "right" ? onSwipeRight() : onSwipeLeft();
+    const item = data[dataIndex];
+    direction === "right" ? onSwipeRight(item) : onSwipeLeft(item);
+    setDataIndex((prevValue) => (prevValue += 1));
+    position.setValue({
+      x: 0,
+      y: 0
+    });
   };
 
   const forceSwipe = (direction) => {
@@ -77,7 +85,11 @@ export default function Deck({ data, renderCard, onSwipeLeft, onSwipeRight }) {
 
   const renderCards = () => {
     return data.map((item, index) => {
-      if (index === 0) {
+      if (index < dataIndex) {
+        return null;
+      }
+
+      if (index === dataIndex) {
         return (
           <Animated.View
             key={item.id}

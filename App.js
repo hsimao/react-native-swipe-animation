@@ -64,12 +64,12 @@ export default function App() {
     );
   };
 
-  const onSwipeLeft = () => {
-    console.log("onSwipeLeft");
+  const onSwipeLeft = (item) => {
+    console.log("onSwipeLeft", item);
   };
 
-  const onSwipeRight = () => {
-    console.log("onSwipeRight");
+  const onSwipeRight = (item) => {
+    console.log("onSwipeRight", item);
   };
 
   return (
