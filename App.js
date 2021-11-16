@@ -64,6 +64,16 @@ export default function App() {
     );
   };
 
+  const renderNoMoreCard = () => {
+    return (
+      <Card>
+        <Card.Title>All Done!</Card.Title>
+        <Text style={{ padding: 16 }}>There's no more content here!</Text>
+        <Button backgroundColor="#03a9f4" title="Get more!" />
+      </Card>
+    );
+  };
+
   const onSwipeLeft = (item) => {
     console.log("onSwipeLeft", item);
   };
@@ -78,8 +88,9 @@ export default function App() {
       <Deck
         data={cardList}
         renderCard={renderCard}
-        onSwipeLeft={onSwipeLeft}
+        renderNoMoreCard={renderNoMoreCard}
         onSwipeRight={onSwipeRight}
+        onSwipeLeft={onSwipeLeft}
       />
     </View>
   );

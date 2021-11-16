@@ -1,7 +1,13 @@
 import React, { useRef, useState } from "react";
 import { Animated, PanResponder, useWindowDimensions } from "react-native";
 
-export default function Deck({ data, renderCard, onSwipeLeft, onSwipeRight }) {
+export default function Deck({
+  data,
+  renderCard,
+  renderNoMoreCard,
+  onSwipeLeft,
+  onSwipeRight
+}) {
   const SCREEN_WIDTH = useWindowDimensions().width;
   const SWIPE_THRESHOLD = 0.25 * SCREEN_WIDTH;
   const SWIPE_OUT_DURATION = 250;
@@ -84,6 +90,10 @@ export default function Deck({ data, renderCard, onSwipeLeft, onSwipeRight }) {
   };
 
   const renderCards = () => {
+    if (dataIndex >= data.length) {
+      return renderNoMoreCard();
+    }
+
     return data.map((item, index) => {
       if (index < dataIndex) {
         return null;
