@@ -42,6 +42,10 @@ export default function Deck({
 
   const position = useRef(new Animated.ValueXY()).current;
 
+  useEffect(() => {
+    setDataIndex(0);
+  }, [data]);
+
   const resetPosition = () => {
     // 彈回去原本位置
     Animated.spring(position, {

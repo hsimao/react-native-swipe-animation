@@ -1,5 +1,5 @@
 import { StatusBar } from "expo-status-bar";
-import React from "react";
+import React, { useState } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import Deck from "./src/Deck";
 import { Card, Button } from "react-native-elements";
@@ -47,7 +47,63 @@ const cardList = [
   }
 ];
 
+const cardList2 = [
+  {
+    id: 9,
+    text: "Card #9",
+    uri: "https://picsum.photos/400/270/?random"
+  },
+  {
+    id: 10,
+    text: "Card #10",
+    uri: "https://picsum.photos/400/290/?random"
+  },
+  {
+    id: 11,
+    text: "Card #11",
+    uri: "https://picsum.photos/390/270/?random"
+  },
+  {
+    id: 12,
+    text: "Card #12",
+    uri: "https://picsum.photos/385/274/?random"
+  },
+  {
+    id: 13,
+    text: "Card #13",
+    uri: "https://picsum.photos/420/270/?random"
+  },
+  {
+    id: 14,
+    text: "Card #14",
+    uri: "https://picsum.photos/400/320/?random"
+  },
+  {
+    id: 15,
+    text: "Card #15",
+    uri: "https://picsum.photos/400/285/?random"
+  },
+  {
+    id: 16,
+    text: "Card #16",
+    uri: "https://picsum.photos/400/330/?random"
+  }
+];
+
 export default function App() {
+  const [currentCardList, setCurrentCardList] = useState(cardList);
+  const [currentCardIndex, setCurrentCardIndex] = useState(1);
+
+  const handleGetMoreCard = () => {
+    if (currentCardIndex === 1) {
+      setCurrentCardList(cardList2);
+      setCurrentCardIndex(2);
+    } else {
+      setCurrentCardList(cardList);
+      setCurrentCardIndex(1);
+    }
+  };
+
   const renderCard = (item) => {
     return (
       <Card containerStyle={{ paddingLeft: 0, paddingRight: 0 }} key={item.id}>
@@ -69,7 +125,11 @@ export default function App() {
       <Card>
         <Card.Title>All Done!</Card.Title>
         <Text style={{ padding: 16 }}>There's no more content here!</Text>
-        <Button backgroundColor="#03a9f4" title="Get more!" />
+        <Button
+          onPress={handleGetMoreCard}
+          backgroundColor="#03a9f4"
+          title="Get more!"
+        />
       </Card>
     );
   };
@@ -86,7 +146,7 @@ export default function App() {
     <View style={styles.container}>
       <StatusBar style="auto" />
       <Deck
-        data={cardList}
+        data={currentCardList}
         renderCard={renderCard}
         renderNoMoreCard={renderNoMoreCard}
         onSwipeRight={onSwipeRight}
