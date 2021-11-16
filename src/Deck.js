@@ -1,5 +1,11 @@
 import React, { useRef, useState } from "react";
 import { Animated, PanResponder, useWindowDimensions } from "react-native";
+import styled from "styled-components/native";
+
+const CardWrapper = styled(Animated.View)`
+  position: absolute;
+  width: 100%;
+`;
 
 export default function Deck({
   data,
@@ -94,25 +100,27 @@ export default function Deck({
       return renderNoMoreCard();
     }
 
-    return data.map((item, index) => {
-      if (index < dataIndex) {
-        return null;
-      }
+    return data
+      .map((item, index) => {
+        if (index < dataIndex) {
+          return null;
+        }
 
-      if (index === dataIndex) {
-        return (
-          <Animated.View
-            key={item.id}
-            style={getCardStyle()}
-            {...panResponder.panHandlers}
-          >
-            {renderCard(item)}
-          </Animated.View>
-        );
-      }
-      return renderCard(item);
-    });
+        if (index === dataIndex) {
+          return (
+            <CardWrapper
+              key={item.id}
+              style={getCardStyle()}
+              {...panResponder.panHandlers}
+            >
+              {renderCard(item)}
+            </CardWrapper>
+          );
+        }
+        return <CardWrapper key={item.id}>{renderCard(item)}</CardWrapper>;
+      })
+      .reverse();
   };
 
-  return <>{renderCards()}</>;
+  return <DeckContainer>{renderCards()}</DeckContainer>;
 }
