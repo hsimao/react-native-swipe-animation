@@ -1,11 +1,31 @@
-import React, { useRef, useState } from "react";
-import { Animated, PanResponder, useWindowDimensions } from "react-native";
+import React, {
+  useRef,
+  useState,
+  useEffect,
+  useCallback,
+  useMemo
+} from "react";
+import {
+  Animated,
+  LayoutAnimation,
+  UIManager,
+  PanResponder,
+  useWindowDimensions,
+  Platform
+} from "react-native";
 import styled from "styled-components/native";
 
 const CardWrapper = styled(Animated.View)`
   position: absolute;
   width: 100%;
 `;
+
+if (
+  Platform.OS === "android" &&
+  UIManager.setLayoutAnimationEnabledExperimental
+) {
+  UIManager.setLayoutAnimationEnabledExperimental(true);
+}
 
 export default function Deck({
   data,
@@ -38,6 +58,7 @@ export default function Deck({
       x: 0,
       y: 0
     });
+    LayoutAnimation.spring();
   };
 
   const forceSwipe = (direction) => {
@@ -80,7 +101,7 @@ export default function Deck({
     })
   ).current;
 
-  const getCardStyle = () => {
+  const getCardStyle = useMemo(() => {
     const rotate = position.x.interpolate({
       inputRange: [-SCREEN_WIDTH * 1.5, 0, SCREEN_WIDTH * 1.5],
       outputRange: ["-120deg", "0deg", "120deg"]
@@ -93,9 +114,9 @@ export default function Deck({
         { rotate }
       ]
     };
-  };
+  }, [position]);
 
-  const renderCards = () => {
+  const renderCards = useCallback(() => {
     if (dataIndex >= data.length) {
       return renderNoMoreCard();
     }
@@ -110,17 +131,26 @@ export default function Deck({
           return (
             <CardWrapper
               key={item.id}
-              style={getCardStyle()}
+              style={getCardStyle}
               {...panResponder.panHandlers}
             >
               {renderCard(item)}
             </CardWrapper>
           );
         }
-        return <CardWrapper key={item.id}>{renderCard(item)}</CardWrapper>;
+        return (
+          <CardWrapper
+            style={{
+              top: 10 * (index - dataIndex)
+            }}
+            key={item.id}
+          >
+            {renderCard(item)}
+          </CardWrapper>
+        );
       })
       .reverse();
-  };
+  }, [dataIndex]);
 
-  return <DeckContainer>{renderCards()}</DeckContainer>;
+  return <>{renderCards()}</>;
 }
